@@ -18,7 +18,7 @@ BRANCH="${BRANCH:-main}"
 
 # Resolve owner/repo for GitHub archive URL
 # Supports: https://github.com/owner/repo or https://github.com/owner/repo.git
-if [[ "$REPO_URL" =~ ^https?://github\.com/([^/]+)/([^/]+?)(\.git)?$ ]]; then
+if [[ "$REPO_URL" =~ ^https?://github\.com/([^/]+)/([^/]+)/?$ ]]; then
 	GITHUB_OWNER="${BASH_REMATCH[1]}"
 	GITHUB_REPO="${BASH_REMATCH[2]%.git}"
 	ARCHIVE_URL="https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/archive/refs/heads/${BRANCH}.zip"
