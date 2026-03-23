@@ -1,6 +1,7 @@
 package logging
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log/slog"
@@ -53,7 +54,7 @@ func NewLogger(cfg Config) (*slog.Logger, io.Closer, error) {
 		handlers = append(handlers, fileHandler)
 	}
 
-	handler := slog.New(multiHandler(handlers))
+	handler := slog.New(newMultiHandler(handlers))
 	return handler, file, nil
 }
 
@@ -62,24 +63,24 @@ type multiHandler struct {
 	handlers []slog.Handler
 }
 
-func multiHandler(handlers []slog.Handler) slog.Handler {
+func newMultiHandler(handlers []slog.Handler) slog.Handler {
 	return &multiHandler{handlers: handlers}
 }
 
-func (h *multiHandler) Enabled(level slog.Level) bool {
+func (h *multiHandler) Enabled(ctx context.Context, level slog.Level) bool {
 	for _, handler := range h.handlers {
-		if handler.Enabled(level) {
+		if handler.Enabled(ctx, level) {
 			return true
 		}
 	}
 	return false
 }
 
-func (h *multiHandler) Handle(r slog.Record) error {
+func (h *multiHandler) Handle(ctx context.Context, r slog.Record) error {
 	var lastErr error
 	for _, handler := range h.handlers {
-		if handler.Enabled(r.Level) {
-			if err := handler.Handle(r); err != nil {
+		if handler.Enabled(ctx, r.Level) {
+			if err := handler.Handle(ctx, r); err != nil {
 				lastErr = err
 			}
 		}
