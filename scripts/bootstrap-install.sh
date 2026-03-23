@@ -12,7 +12,7 @@
 set -e
 
 # Default repo - override with first arg or REPO_URL env
-DEFAULT_REPO="https://github.com/pmferg/apple-messages-relay"
+DEFAULT_REPO="https://github.com/pmferg/apple-messages-relay.git"
 REPO_URL="${REPO_URL:-${1:-$DEFAULT_REPO}}"
 BRANCH="${BRANCH:-main}"
 
