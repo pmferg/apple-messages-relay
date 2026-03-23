@@ -1,4 +1,4 @@
-# messages-relay
+# apple-messages-relay
 
 A production-quality personal automation tool that subscribes to an MQTT topic and relays validated messages via macOS Messages.app (iMessage).
 
