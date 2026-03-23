@@ -107,4 +107,4 @@ echo "Installing Go (if needed)..."
 ensure_go
 
 echo ""
-"$REPO_DIR/scripts/install.sh"
+bash "$REPO_DIR/scripts/install.sh"
