@@ -62,31 +62,54 @@ A production-quality personal automation tool that subscribes to an MQTT topic a
 
 - macOS with Messages.app (iMessage) configured
 - User logged in (LaunchAgent runs in user session)
-- Go 1.21+ (for building from source)
 - Network access to your MQTT broker
+- **No local dependencies required** — the bootstrap installer fetches Go and the source automatically
 
-### Step-by-step
+### Option A: One-liner (recommended)
 
-1. **Clone or download** this repository.
+Run this to install everything from a URL. No need to clone the repo or install Go first:
 
-2. **Run the installer:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/pmferg/apple-messages-relay/main/scripts/bootstrap-install.sh | bash
+```
+
+
+The bootstrap script will:
+- Install Go (via Homebrew or direct download) if not already installed
+- Download the repository
+- Run the full installer and prompt for configuration
+
+### Option B: From a local clone
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/pmferg/apple-messages-relay.git
+   cd apple-messages-relay
+   ```
+
+2. **Run the installer** (requires Go 1.21+ installed):
    ```bash
    ./scripts/install.sh
    ```
 
-3. **Provide values when prompted:**
-   - MQTT broker URL (e.g. `ssl://broker.example.com:8883`)
-   - MQTT topic (e.g. `personal/messages/send`)
-   - MQTT username and password
-   - Shared secret (used for HMAC; use a long random string)
-   - Optional: comma-separated allowed destinations (empty = allow all)
+### Configuration prompts
 
-4. **Grant permissions** when macOS prompts:
+When the installer runs, provide:
+
+- MQTT broker URL (e.g. `ssl://broker.example.com:8883`)
+- MQTT topic (e.g. `personal/messages/send`)
+- MQTT username and password
+- Shared secret (used for HMAC; use a long random string)
+- Optional: comma-separated allowed destinations (empty = allow all)
+
+### After installation
+
+1. **Grant permissions** when macOS prompts:
    - System Settings → Privacy & Security → Automation → allow the terminal (or `messages-relay`) to control Messages
 
-5. **Verify** Messages.app is signed in to iMessage and ready to send.
+2. **Verify** Messages.app is signed in to iMessage and ready to send.
 
-6. **Check logs** if needed:
+3. **Check logs** if needed:
    ```bash
    tail -f ~/Library/Logs/messages-relay/messages-relay.log
    ```
@@ -148,7 +171,7 @@ Example: `+447700900123\nHello\n1700000000\n550e8400-e29b-41d4-a716-446655440000
 **Go:**
 
 ```go
-import "github.com/example/messages-relay/internal/security"
+import "github.com/pmferg/apple-messages-relay/internal/security"
 
 canonical := security.CanonicalInput(destination, payload, timestamp, nonce)
 hash := security.ComputeHMAC(sharedSecret, canonical)
@@ -273,5 +296,7 @@ Set `relay.test_mode: true` in config. The relay will accept messages but not in
 ## Uninstall
 
 ```bash
-./scripts/uninstall.sh
+~/Library/Application\ Support/messages-relay/uninstall.sh
 ```
+
+Or from a local clone: `./scripts/uninstall.sh`

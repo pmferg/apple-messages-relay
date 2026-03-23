@@ -88,8 +88,10 @@ cat > "$APP_SUPPORT/config.json" << EOF
 }
 EOF
 
-# Copy AppleScript
+# Copy AppleScript and uninstall script
 cp "$SCRIPT_DIR/send-message.applescript" "$APP_SUPPORT/send-message.applescript"
+cp "$SCRIPT_DIR/uninstall.sh" "$APP_SUPPORT/uninstall.sh"
+chmod +x "$APP_SUPPORT/uninstall.sh"
 
 # Generate LaunchAgent plist
 BINARY_PATH="$BIN_DIR/$BIN_NAME"
@@ -119,4 +121,4 @@ echo "1. Grant Messages.app permission when prompted (System Settings > Privacy 
 echo "2. Ensure you are logged in to iMessage in Messages.app"
 echo "3. Check logs: tail -f $LOG_PATH"
 echo ""
-echo "To uninstall: ./scripts/uninstall.sh"
+echo "To uninstall: $APP_SUPPORT/uninstall.sh"
